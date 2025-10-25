@@ -1,1 +1,1 @@
-# notion-gamify-my-life
+# my golang mini project
