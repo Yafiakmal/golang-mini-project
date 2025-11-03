@@ -12,7 +12,10 @@ import (
 )
 
 func main() {
-	godotenv.Load()
+	err := godotenv.Load()
+	if err != nil {
+		log.Println(err)
+	}
 
 	// initialize postgres
 	db, err := config.NewGormConnection(config.GetDBConfig())
