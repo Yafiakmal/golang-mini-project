@@ -16,7 +16,7 @@ export default function UrlList() {
   useEffect(() => {
     const fetchUrls = async () => {
       try {
-        const res = await axios.get<UrlItem[]>("http://13.213.2.17:80/urls");
+        const res = await axios.get<UrlItem[]>("http://13.213.2.17:8080/urls");
         setUrls(res.data);
       } catch (err) {
         alert("Failed to fetch URLs " + err);
@@ -28,7 +28,7 @@ export default function UrlList() {
   const handleDelete = async (name: string) => {
     if (!confirm(`Delete ${name}?`)) return;
     try {
-      await axios.delete(`http://13.213.2.17:80/${name}`);
+      await axios.delete(`http://13.213.2.17:8080/${name}`);
       setToggle(!toggle);
     } catch (err) {
       alert("Failed to delete: " + err);

@@ -12,7 +12,7 @@ export default function UrlForm() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://13.213.2.17:80/shortener", {
+      const response = await axios.post("http://13.213.2.17:8080/shortener", {
         url: url,
         short_url: urlShort,
       });
