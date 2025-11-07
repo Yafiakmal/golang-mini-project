@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,9 @@ func GetAllUrlHandler(c *gin.Context, db *gorm.DB) {
 	url := &[]models.Url{}
 	res := db.WithContext(context.Background()).Find(url)
 	if res.Error != nil {
+		log.Println(res.Error)
 		c.JSON(http.StatusConflict, nil)
+		return
 	}
 	c.JSON(http.StatusOK, url)
 }

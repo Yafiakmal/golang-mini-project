@@ -56,15 +56,22 @@ func NewGormConnection(dbConfig *Config) (*gorm.DB, error) {
 		dbConfig.DBName, dbConfig.Port, dbConfig.SSLMode, dbConfig.TimeZone,
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		DSN:                  dsn,
+		PreferSimpleProtocol: true, // ✅ ini cara yang benar
+	}), &gorm.Config{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect database: %w", err)
 	}
 
 	sqlDB, err := db.DB()
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to get sql.DB: %w", err)
 	}
+	/*
+		defer sqlDB.Close()
+	*/
 
 	poolConfig := GetPoolConfig()
 	sqlDB.SetMaxIdleConns(poolConfig.MaxIdleConns)

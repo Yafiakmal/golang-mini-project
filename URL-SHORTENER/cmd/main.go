@@ -22,7 +22,8 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
-
+	sqlDB, _ := db.DB()
+	defer sqlDB.Close()
 	server := gin.Default()
 
 	server.Use(cors.New(cors.Config{
@@ -42,8 +43,11 @@ func main() {
 	server.GET("/:name", func(ctx *gin.Context) {
 		handler.Redirect(ctx, db)
 	})
-	server.DELETE("/:id", func(ctx *gin.Context) {
-		handler.Redirect(ctx, db)
+	server.DELETE("/:name", func(ctx *gin.Context) {
+		handler.DeleteUrl(ctx, db)
 	})
-	server.Run(":80")
+	err = server.Run(":8080")
+	if err != nil {
+		log.Fatalln("failed to start server ", err)
+	}
 }
