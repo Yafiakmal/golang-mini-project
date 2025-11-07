@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import React from 'react'
 import axios from "axios";
+import { useGlobal } from "./GlobalState";
 
 interface UrlItem {
   ID: number;
@@ -8,12 +8,10 @@ interface UrlItem {
   ShortUrl: string;
   UserID: string;
 }
-type Props = {
-  clicked: boolean,
-  children?: React.ReactNode
-}
-export default function UrlList({ clicked }: Props) {
+
+export default function UrlList() {
   const [urls, setUrls] = useState<UrlItem[]>([]);
+  const { toggle, setToggle } = useGlobal();
 
   useEffect(() => {
     const fetchUrls = async () => {
@@ -21,11 +19,21 @@ export default function UrlList({ clicked }: Props) {
         const res = await axios.get<UrlItem[]>("http://13.213.2.17:80/urls");
         setUrls(res.data);
       } catch (err) {
-        console.error("Failed to fetch URLs:", err);
+        alert("Failed to fetch URLs " + err);
       }
     };
     fetchUrls();
-  }, [clicked]);
+  }, [toggle]);
+
+  const handleDelete = async (name: string) => {
+    if (!confirm(`Delete ${name}?`)) return;
+    try {
+      await axios.delete(`http://13.213.2.17:80/${name}`);
+      setToggle(!toggle);
+    } catch (err) {
+      alert("Failed to delete: " + err);
+    }
+  };
 
   return (
     <div className="mt-8 bg-white p-6 rounded-2xl shadow-lg w-full max-w-3xl mx-auto">
@@ -34,32 +42,40 @@ export default function UrlList({ clicked }: Props) {
       <table className="w-full border-collapse border border-gray-300 text-sm">
         <thead className="bg-gray-100">
           <tr>
-            <th className="border border-gray-300 px-4 py-2 text-left">#</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Original URL</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">Short URL</th>
-            <th className="border border-gray-300 px-4 py-2 text-left">User ID</th>
+            <th className="border px-4 py-2 text-left">#</th>
+            <th className="border px-4 py-2 text-left">Original URL</th>
+            <th className="border px-4 py-2 text-left">Short URL</th>
+            <th className="border px-4 py-2 text-left">User ID</th>
+            <th className="border px-4 py-2 text-left">Action</th>
           </tr>
         </thead>
         <tbody>
           {urls.map((item, index) => (
             <tr key={item.ID} className="hover:bg-gray-50">
-              <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
-              <td className="border border-gray-300 px-4 py-2 truncate max-w-xs">
-                <a href={item.Url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+              <td className="border px-4 py-2">{index + 1}</td>
+              <td className="border px-4 py-2 truncate max-w-xs">
+                <a href={item.Url} target="_blank" className="text-blue-600 hover:underline">
                   {item.Url}
                 </a>
               </td>
-              <td className="border border-gray-300 px-4 py-2">
+              <td className="border px-4 py-2">
                 <a
                   href={`http://13.213.2.17/${item.ShortUrl}`}
                   target="_blank"
-                  rel="noopener noreferrer"
                   className="text-blue-600 hover:underline"
                 >
                   {item.ShortUrl}
                 </a>
               </td>
-              <td className="border border-gray-300 px-4 py-2">{item.UserID}</td>
+              <td className="border px-4 py-2">{item.UserID}</td>
+              <td className="border px-4 py-2">
+                <button
+                  onClick={() => handleDelete(item.ShortUrl)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

@@ -1,10 +1,12 @@
 import axios from 'axios'
 import { useState } from "react"
+import { useGlobal } from './GlobalState';
 
 
 export default function UrlForm() {
   const [url, setUrl] = useState("");
   const [urlShort, setUrlShort] = useState("");
+  const { toggle, setToggle } = useGlobal();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,6 +18,7 @@ export default function UrlForm() {
       });
 
       console.log("Response:", response.data);
+      setToggle(!toggle);
       alert("Success Response: " + JSON.stringify(response.data));
     } catch (error: any) {
       if (axios.isAxiosError(error)) {
@@ -28,6 +31,8 @@ export default function UrlForm() {
         alert("Unexp Error: " + error.message)
 
       }
+    } finally {
+      setToggle(!toggle);
     }
   }
   return (
