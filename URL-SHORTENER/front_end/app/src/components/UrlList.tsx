@@ -17,6 +17,7 @@ export default function UrlList() {
     const fetchUrls = async () => {
       try {
         const res = await axios.get<UrlItem[]>("http://13.213.2.17:8080/urls");
+        console.log(res.data);
         setUrls(res.data);
       } catch (err) {
         alert("Failed to fetch URLs " + err);
@@ -60,7 +61,7 @@ export default function UrlList() {
               </td>
               <td className="border px-4 py-2">
                 <a
-                  href={`http://13.213.2.17/${item.ShortUrl}`}
+                  href={`http://13.213.2.17:8080/${item.ShortUrl}`}
                   target="_blank"
                   className="text-blue-600 hover:underline"
                 >
