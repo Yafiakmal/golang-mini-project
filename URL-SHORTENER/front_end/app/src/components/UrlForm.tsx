@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState } from "react"
 import { useGlobal } from './GlobalState';
-
+import { API_URL } from '../config/env';
 
 export default function UrlForm() {
   const [url, setUrl] = useState("");
@@ -12,7 +12,7 @@ export default function UrlForm() {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://13.213.2.17:8080/shortener", {
+      const response = await axios.post(`${API_URL}/shortener`, {
         url: url,
         short_url: urlShort,
       });

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useGlobal } from "./GlobalState";
+import { API_URL } from "../config/env";
 
 interface UrlItem {
   ID: number;
@@ -16,7 +17,7 @@ export default function UrlList() {
   useEffect(() => {
     const fetchUrls = async () => {
       try {
-        const res = await axios.get<UrlItem[]>("http://13.213.2.17:8080/urls");
+        const res = await axios.get<UrlItem[]>(`${API_URL}/urls`);
         console.log(res.data);
         setUrls(res.data);
       } catch (err) {
@@ -29,7 +30,7 @@ export default function UrlList() {
   const handleDelete = async (name: string) => {
     if (!confirm(`Delete ${name}?`)) return;
     try {
-      await axios.delete(`http://13.213.2.17:8080/${name}`);
+      await axios.delete(`${API_URL}/${name}`);
       setToggle(!toggle);
     } catch (err) {
       alert("Failed to delete: " + err);
@@ -61,7 +62,7 @@ export default function UrlList() {
               </td>
               <td className="border px-4 py-2">
                 <a
-                  href={`http://13.213.2.17:8080/${item.ShortUrl}`}
+                  href={`${API_URL}/${item.ShortUrl}`}
                   target="_blank"
                   className="text-blue-600 hover:underline"
                 >
