@@ -8,10 +8,15 @@ import (
 
 type Url struct {
 	gorm.Model
-	Url      string `gorm:"type:varchar(2048);not null"`
-	ShortUrl string `gorm:"type:varchar(512);not null;unique"`
-	UserID   string `gorm:"type:varchar(256);not null"`
+	Url    string `gorm:"type:varchar(2048);not null"`
+	Name   string `gorm:"type:varchar(512);not null;unique"`
+	UserID uint   `gorm:"not null;unique"`
 }
+
+// func (u Url) String() string {
+// 	str := "Url: " + u.Url + ", ShortUrl: " + u.Name + ", UserID: " + string(rune(u.UserID))
+// 	return str
+// }
 
 func AutoMigrate(db *gorm.DB) error {
 	log.Printf("Dropping All Table")

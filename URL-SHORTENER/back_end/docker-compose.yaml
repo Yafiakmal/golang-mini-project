@@ -19,5 +19,6 @@ networks:
     external: true
 volumes:
   postgres_alpine_data:
-    driver: local
+    # driver: local
     name: postgres_alpine_data
+    external: true

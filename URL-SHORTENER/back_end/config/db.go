@@ -1,15 +1,8 @@
 package config
 
 import (
-	"database/sql"
-	"fmt"
-	"log"
 	"os"
 	"time"
-
-	"github.com/yafiakmal/golang-mini-project/url-shortener/models"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 type Config struct {
@@ -48,60 +41,23 @@ func GetPoolConfig() PoolConfig {
 	}
 }
 
-// postgresql://postgres:[YOUR_PASSWORD]@db.rtocusuptglvetwispqn.supabase.co:5432/postgres
-func NewGormConnection(dbConfig *Config) (*gorm.DB, error) {
-	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
-		dbConfig.Host, dbConfig.User, dbConfig.Password,
-		dbConfig.DBName, dbConfig.Port, dbConfig.SSLMode, dbConfig.TimeZone,
-	)
-
-	db, err := gorm.Open(postgres.New(postgres.Config{
-		DSN:                  dsn,
-		PreferSimpleProtocol: true, // ✅ ini cara yang benar
-	}), &gorm.Config{})
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect database: %w", err)
-	}
-
-	sqlDB, err := db.DB()
-
-	if err != nil {
-		return nil, fmt.Errorf("failed to get sql.DB: %w", err)
-	}
-	/*
-		defer sqlDB.Close()
-	*/
-
-	poolConfig := GetPoolConfig()
-	sqlDB.SetMaxIdleConns(poolConfig.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(poolConfig.MaxOpenConns)
-	sqlDB.SetConnMaxLifetime(poolConfig.ConnMaxLifetime)
-
-	if err := models.AutoMigrate(db); err != nil {
-		return nil, fmt.Errorf("failed to migrate: %w", err)
-	}
-
-	return db, nil
-}
-
 // NewConnection creates a new database connection
-func NewSqlConnection(config Config) (*sql.DB, error) {
-	dsn := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=%s",
-		config.Host, config.Port, config.User, config.Password, config.DBName, config.SSLMode, config.TimeZone,
-	)
+// func NewSqlConnection(config Config) (*sql.DB, error) {
+// 	dsn := fmt.Sprintf(
+// 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=%s",
+// 		config.Host, config.Port, config.User, config.Password, config.DBName, config.SSLMode, config.TimeZone,
+// 	)
 
-	db, err := sql.Open("postgres", dsn)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open database: %w", err)
-	}
+// 	db, err := sql.Open("postgres", dsn)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("failed to open database: %w", err)
+// 	}
 
-	// Test the connection
-	if err := db.Ping(); err != nil {
-		return nil, fmt.Errorf("failed to ping database: %w", err)
-	}
+// 	// Test the connection
+// 	if err := db.Ping(); err != nil {
+// 		return nil, fmt.Errorf("failed to ping database: %w", err)
+// 	}
 
-	log.Println("Successfully connected to database")
-	return db, nil
-}
+// 	log.Println("Successfully connected to database")
+// 	return db, nil
+// }

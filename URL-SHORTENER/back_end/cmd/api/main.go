@@ -1,24 +1,22 @@
 package main
 
 import (
-	"github.com/gin-contrib/cors"
 	"log"
 	"time"
 
+	"github.com/gin-contrib/cors"
+
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/yafiakmal/golang-mini-project/url-shortener/config"
-	"github.com/yafiakmal/golang-mini-project/url-shortener/handler"
+	"github.com/yafiakmal/golang-mini-project/url-shortener/internal/database"
+	"github.com/yafiakmal/golang-mini-project/url-shortener/internal/handler"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Println(err)
-	}
+	config.EnvLoad()
 
 	// initialize postgres
-	db, err := config.NewGormConnection(config.GetDBConfig())
+	db, err := database.Connect(config.GetDBConfig())
 	if err != nil {
 		log.Panic(err)
 	}

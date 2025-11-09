@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/yafiakmal/golang-mini-project/url-shortener/models"
+	"github.com/yafiakmal/golang-mini-project/url-shortener/internal/models"
 	"gorm.io/gorm"
 )
 
@@ -16,8 +16,8 @@ func GetAllUrlHandler(c *gin.Context, db *gorm.DB) {
 	res := db.WithContext(context.Background()).Find(url)
 	if res.Error != nil {
 		log.Println(res.Error)
-		c.JSON(http.StatusConflict, nil)
+		c.JSON(http.StatusConflict, gin.H{"error": res.Error})
 		return
 	}
-	c.JSON(http.StatusOK, url)
+	c.JSON(http.StatusOK, gin.H{"data": url})
 }
