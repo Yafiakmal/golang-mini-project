@@ -14,7 +14,7 @@ export default function UrlForm() {
     try {
       const response = await axios.post(`${API_URL}/shortener`, {
         url: url,
-        short_url: urlShort,
+        name: urlShort,
       });
 
       console.log("Response:", response.data);
@@ -36,7 +36,7 @@ export default function UrlForm() {
     }
   }
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+    <div className="flex items-center justify-center bg-gray-100">
       <form onSubmit={handleSubmit}
         className="bg-white p-8  rounded-2xl shadow-lg w-full max-w-md space-y-4">
         <h1 className="text-2xl font-semibold text-center text-gray-700">

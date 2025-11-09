@@ -10,7 +10,7 @@ type Url struct {
 	gorm.Model
 	Url    string `gorm:"type:varchar(2048);not null"`
 	Name   string `gorm:"type:varchar(512);not null;unique"`
-	UserID uint   `gorm:"not null;unique"`
+	UserID uint   `gorm:"not null"`
 }
 
 // func (u Url) String() string {

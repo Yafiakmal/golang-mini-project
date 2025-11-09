@@ -6,7 +6,7 @@ import { API_URL } from "../config/env";
 interface UrlItem {
   ID: number;
   Url: string;
-  ShortUrl: string;
+  Name: string;
   UserID: string;
 }
 
@@ -17,9 +17,9 @@ export default function UrlList() {
   useEffect(() => {
     const fetchUrls = async () => {
       try {
-        const res = await axios.get<UrlItem[]>(`${API_URL}/urls`);
-        console.log(res.data);
-        setUrls(res.data);
+        const res = await axios.get(`${API_URL}/urls`);
+        console.log("res: ", res.data.data);
+        setUrls(res.data.data);
       } catch (err) {
         alert("Failed to fetch URLs " + err);
       }
@@ -62,17 +62,17 @@ export default function UrlList() {
               </td>
               <td className="border px-4 py-2">
                 <a
-                  href={`${API_URL}/${item.ShortUrl}`}
+                  href={`${API_URL}/${item.Name}`}
                   target="_blank"
                   className="text-blue-600 hover:underline"
                 >
-                  {item.ShortUrl}
+                  {item.Name}
                 </a>
               </td>
               <td className="border px-4 py-2">{item.UserID}</td>
               <td className="border px-4 py-2">
                 <button
-                  onClick={() => handleDelete(item.ShortUrl)}
+                  onClick={() => handleDelete(item.Name)}
                   className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                 >
                   Delete
